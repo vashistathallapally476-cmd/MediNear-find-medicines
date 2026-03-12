@@ -1,0 +1,205 @@
+/* ============================================================
+   MedNear — Animations
+   ============================================================ */
+
+/* ── Keyframes ───────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(30px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,217,192,0.2); }
+  50%       { box-shadow: 0 0 40px rgba(0,217,192,0.45); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes drawLine {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes crosshair {
+  0%    { transform: scale(0.6); opacity: 0; }
+  50%   { transform: scale(1.1); opacity: 1; }
+  100%  { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ping {
+  0%   { transform: scale(1); opacity: 0.8; }
+  80%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes waveRipple {
+  0%   { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes counterUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes borderScan {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes typingDot {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+  40%            { transform: scale(1); opacity: 1; }
+}
+
+/* ── Animation Classes ───────────────────────────────────────── */
+.animate-fadeIn   { animation: fadeIn   0.5s ease both; }
+.animate-fadeUp   { animation: fadeUp   0.5s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-fadeDown { animation: fadeDown 0.4s ease both; }
+.animate-scaleIn  { animation: scaleIn  0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-slideRight { animation: slideInRight 0.5s cubic-bezier(0.4,0,0.2,1) both; }
+.animate-float    { animation: float 4s ease-in-out infinite; }
+.animate-pulse    { animation: pulse 2s ease-in-out infinite; }
+.animate-glow     { animation: glowPulse 3s ease-in-out infinite; }
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+.delay-8 { animation-delay: 0.8s; }
+
+/* ── Shimmer Skeleton ─────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Ping Dot ────────────────────────────────────────────────── */
+.ping-dot {
+  position: relative; display: inline-block;
+  width: 10px; height: 10px;
+}
+.ping-dot::before {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 50%;
+  background: var(--teal);
+  animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.ping-dot::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 50%; background: var(--teal);
+}
+
+/* ── Page Transitions ────────────────────────────────────────── */
+.page-enter {
+  animation: fadeUp 0.45s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* ── Teal Underline Animate ──────────────────────────────────── */
+.underline-animate {
+  position: relative;
+}
+.underline-animate::after {
+  content: ''; position: absolute;
+  bottom: -4px; left: 0;
+  height: 2px; width: 0;
+  background: var(--teal);
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.underline-animate:hover::after { width: 100%; }
+
+/* ── Hero Orb ────────────────────────────────────────────────── */
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none;
+}
+.orb-teal {
+  background: radial-gradient(circle, rgba(0,217,192,0.25), transparent 70%);
+  animation: float 8s ease-in-out infinite;
+}
+.orb-blue {
+  background: radial-gradient(circle, rgba(0,100,220,0.2), transparent 70%);
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+/* ── Search Ripple ───────────────────────────────────────────── */
+.search-ripple {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  border: 1.5px solid var(--teal);
+  animation: waveRipple 2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ── Counter animation ───────────────────────────────────────── */
+.count-up {
+  display: inline-block;
+  animation: counterUp 0.6s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* ── Card hover lift ─────────────────────────────────────────── */
+.hover-lift { transition: transform 0.28s ease, box-shadow 0.28s ease; }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }

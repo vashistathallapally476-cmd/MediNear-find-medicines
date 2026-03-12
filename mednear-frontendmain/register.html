@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — MedNear</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+     .register-layout{
+      min-height:100vh;
+      width:100%;
+      max-width:1200px;
+      margin:0 auto;
+
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+
+      padding:40px 20px 80px;
+      position:relative;
+    }
+    .register-header { text-align: center; margin-bottom: 40px; }
+    .register-header .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--muted); font-size: 0.85rem; text-decoration: none;
+      margin-bottom: 24px; transition: color 0.2s;
+    }
+    .register-header .back-link:hover { color: var(--teal); }
+    .register-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
+    .register-sub   { color: var(--muted); font-size: 0.95rem; }
+
+    /* ── Stepper ─── */
+            .stepper{
+          width:100%;
+          max-width:700px;
+          margin-bottom:40px;
+        }
+
+    .step-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      flex: 1;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute; top: 18px; left: calc(50% + 18px);
+      width: calc(100% - 36px); height: 2px;
+      background: var(--glass-border);
+      transition: background 0.4s;
+    }
+    .step-item.done::after { background: var(--teal); }
+    .step-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      border: 2px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; color: var(--muted);
+      transition: all 0.35s;
+      position: relative; z-index: 1;
+    }
+    .step-dot.active { border-color: var(--teal); color: var(--teal); background: rgba(0,217,192,0.1); box-shadow: 0 0 16px rgba(0,217,192,0.2); }
+    .step-dot.done   { border-color: var(--teal); background: var(--teal); color: var(--navy); }
+    .step-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
+    .step-label.active { color: var(--teal); }
+
+    /* ── Form Card ─── */
+    /*.register-form-card {
+      width: 100%; max-width: 520px;
+      padding: 40px;
+      border-radius: var(--radius-xl);
+      background: rgba(12,26,53,0.7);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+    }*/
+        .register-form-card {
+      width:100%;
+      max-width:700px;
+      padding:40px;
+        }
+
+    /* ── Steps ─── */
+    .form-step { display: none; animation: fadeUp 0.35s ease both; }
+    .form-step.active { display: block; }
+    .step-title{
+      font-size:1.5rem;
+        }
+    .step-subtitle{
+     font-size:1rem;
+      }
+    .form-stack { display: flex; flex-direction: column; gap: 18px; }
+    .step-nav { display: flex; gap: 12px; margin-top: 24px; }
+
+    /* ── Password Strength ─── */
+    .strength-track {
+      height: 4px; background: rgba(255,255,255,0.08);
+      border-radius: 2px; margin-top: 8px; overflow: hidden;
+    }
+    #strength-meter {
+      height: 100%; width: 0; border-radius: 2px;
+      transition: width 0.4s, background 0.4s;
+    }
+    .strength-meta {
+      display: flex; justify-content: space-between;
+      font-size: 0.75rem; margin-top: 4px;
+    }
+    #strength-label { font-weight: 600; }
+
+    /* ── Terms ─── */
+    .terms-box {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px; border-radius: var(--radius-md);
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+    }
+    .terms-box input { margin-top: 2px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+    .terms-box label { font-size: 0.85rem; color: var(--muted); line-height: 1.5; cursor: pointer; }
+    .terms-box label a { color: var(--teal); text-decoration: none; }
+
+    /* ── Success State ─── */
+    .success-state { display: none; text-align: center; padding: 20px 0; }
+    .success-state.show { display: block; animation: scaleIn 0.5s ease both; }
+    .success-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0,217,192,0.2), rgba(0,168,150,0.1));
+      border: 2px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 20px;
+      box-shadow: 0 0 40px rgba(0,217,192,0.2);
+    }
+
+    /* ── Info Cards (Step 3 summary) ─── */
+    .review-card {
+      padding: 14px 16px; margin-bottom: 12px;
+      border-radius: var(--radius-md);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+    }
+    .review-item { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.88rem; }
+    .review-item:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .review-key   { color: var(--muted); }
+    .review-value { font-weight: 500; }
+
+    .form-footer-text {
+      text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--muted);
+    }
+    .form-footer-text a { color: var(--teal); text-decoration: none; }
+    .form-footer-text a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .register-form-card { padding: 28px 20px; }
+      .step-label { display: none; }
+    }
+    /*registration layout*/
+    /* ===== Register Page Layout Fix ===== */
+
+.register-layout{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px 20px 80px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* make form wider */
+.register-form-card{
+  width:100%;
+  max-width:650px;
+}
+
+/* stepper width */
+.stepper{
+  width:100%;
+  max-width:650px;
+}
+
+  </style>
+</head>
+<body data-page="register">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+  <div id="toast-container"></div>
+
+  <div class="register-layout">
+    <div class="orb orb-teal" style="width:500px;height:400px;top:-100px;right:-100px;opacity:0.4;pointer-events:none"></div>
+
+    <!-- Header -->
+    <div class="register-header animate-fadeDown">
+      <a href="index.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back to Home
+      </a>
+      <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:12px">
+        <div class="nav-logo">M</div>
+        <span class="nav-name">Med<span>Near</span></span>
+      </div>
+      <h1 class="register-title">Create Your <span class="text-teal">Pharmacy</span> Account</h1>
+      <p class="register-sub">Join thousands of pharmacies helping patients find medicines faster</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper animate-fadeUp">
+      <div class="step-item">
+        <div class="step-dot active" id="dot-1">1</div>
+        <span class="step-label active" id="lbl-1">Personal</span>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot-2">2</div>
+        <span class="step-label" id="lbl-2">Security</span>
+      </div>
+      <div class="step-item">
+        <div class="step-dot" id="dot-3">3</div>
+        <span class="step-label" id="lbl-3">Review</span>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="register-form-card animate-scaleIn" style="animation-delay:0.1s">
+      <form id="register-form">
+        <!-- Step 1: Personal Info -->
+        <div class="form-step active" data-step="1">
+          <h3 class="step-title">Personal Information</h3>
+          <p class="step-subtitle">Tell us about the store owner</p>
+          <div class="form-stack">
+            <div class="form-group">
+              <label class="form-label" for="full-name">Full Name</label>
+              <div class="input-group">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </span>
+                <input type="text" class="form-control" id="full-name" placeholder="Dr. Ramesh Kumar">
+              </div>
+              <span class="form-error" id="name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reg-email">Email Address</label>
+              <div class="input-group">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <input type="email" class="form-control" id="reg-email" placeholder="pharmacy@email.com">
+              </div>
+              <span class="form-error" id="reg-email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="phone">Mobile Number</label>
+              <div class="input-group">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                  </svg>
+                </span>
+                <input type="tel" class="form-control" id="phone" placeholder="+91 98765 43210">
+              </div>
+              <span class="form-error" id="phone-error"></span>
+            </div>
+          </div>
+          <div class="step-nav">
+            <button type="button" class="btn btn-primary btn-block" data-next-step>
+              Continue
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Security -->
+        <div class="form-step" data-step="2">
+          <h3 class="step-title">Create Password</h3>
+          <p class="step-subtitle">Choose a strong password to protect your account</p>
+          <div class="form-stack">
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password</label>
+              <div class="input-group suffix">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input type="password" class="form-control" id="reg-password" placeholder="Minimum 8 characters">
+                <span class="input-suffix" data-toggle-pass="reg-password">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="strength-track"><div id="strength-meter"></div></div>
+              <div class="strength-meta">
+                <span class="form-hint">Use uppercase, numbers &amp; symbols</span>
+                <span id="strength-label"></span>
+              </div>
+              <span class="form-error" id="pass-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirm-password">Confirm Password</label>
+              <div class="input-group suffix">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </span>
+                <input type="password" class="form-control" id="confirm-password" placeholder="Repeat your password">
+                <span class="input-suffix" data-toggle-pass="confirm-password">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </span>
+              </div>
+              <span class="form-error" id="pass2-error"></span>
+            </div>
+          </div>
+          <div class="step-nav">
+            <button type="button" class="btn btn-ghost" data-prev-step style="min-width:110px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Back
+            </button>
+            <button type="button" class="btn btn-primary" style="flex:1" data-next-step>
+              Review Details
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review & Submit -->
+        <div class="form-step" data-step="3">
+          <h3 class="step-title">Review &amp; Confirm</h3>
+          <p class="step-subtitle">Check your details before creating the account</p>
+
+          <div class="review-card">
+            <div class="review-item">
+              <span class="review-key">Full Name</span>
+              <span class="review-value" id="rev-name">—</span>
+            </div>
+            <div class="review-item">
+              <span class="review-key">Email</span>
+              <span class="review-value" id="rev-email">—</span>
+            </div>
+            <div class="review-item">
+              <span class="review-key">Phone</span>
+              <span class="review-value" id="rev-phone">—</span>
+            </div>
+            <div class="review-item">
+              <span class="review-key">Account Type</span>
+              <span class="review-value text-teal">Pharmacy Owner</span>
+            </div>
+          </div>
+
+          <div class="terms-box">
+            <input type="checkbox" id="terms-checkbox">
+            <label for="terms-checkbox">
+              I agree to MedNear's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+              I confirm that all provided information is accurate.
+            </label>
+          </div>
+
+          <div class="step-nav" style="margin-top:20px">
+            <button type="button" class="btn btn-ghost" data-prev-step style="min-width:110px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Back
+            </button>
+            <button type="submit" class="btn btn-primary" style="flex:1" id="register-btn">
+              Create Account
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-footer-text animate-fadeUp delay-3">
+      Already have an account? <a href="login.html">Sign in →</a>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Populate review step on step change
+    document.querySelectorAll('[data-next-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const n = document.getElementById('rev-name');
+        const e = document.getElementById('rev-email');
+        const p = document.getElementById('rev-phone');
+        if (n) n.textContent = document.getElementById('full-name')?.value || '—';
+        if (e) e.textContent = document.getElementById('reg-email')?.value || '—';
+        if (p) p.textContent = document.getElementById('phone')?.value || '—';
+      });
+    });
+  </script>
+</body>
+</html>
